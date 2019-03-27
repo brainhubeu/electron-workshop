@@ -1,3 +1,4 @@
+const { ipcRenderer } = require('electron');
 const storage = require('electron-json-storage');
 
 const updateValue = (id, value) => {
@@ -21,6 +22,16 @@ const updateCurrentWeather = (weatherData) => {
   }
 };
 
+const saveToJson = async () => {
+  try {
+    const data = await getWeatherData();
+    updateCurrentWeather(data.now);
+    ipcRenderer.send('save-to-json', data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const getWeatherData = (city = 'Bielsko-biała') => {
   return fetch(`https://pogodynka.ml/${encodeURI(city)}`)
     .then(response=> response.json())
@@ -37,4 +48,9 @@ const getWeatherData = (city = 'Bielsko-biała') => {
 
 
 getWeatherData()
-  .then(weatherData => updateCurrentWeather(weatherData.now));
+  .then(weatherData => {
+    updateCurrentWeather(weatherData.now);
+    document.getElementById('saveToJsonBtn').addEventListener('click', saveToJson);
+    ipcRenderer.on('save-to-json-shortcut', saveToJson);
+  });
+

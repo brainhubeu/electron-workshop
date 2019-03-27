@@ -4,3 +4,7 @@ html {
 body {
     height: 100%;
 }
+
+.weather__image {
+    height: 200px;
+}

@@ -1,3 +1,5 @@
+const storage = require('electron-json-storage');
+
 const updateValue = (id, value) => {
   if (value) {
     document.getElementById(id).innerHTML = value;
@@ -9,7 +11,6 @@ const setImage = (weatherDescription) => {
 };
 
 const updateCurrentWeather = (weatherData) => {
-  console.log('weatherData', weatherData);
   if (weatherData) {
     setImage(weatherData.description);
     updateValue('currentDescription', weatherData.description);
@@ -22,7 +23,16 @@ const updateCurrentWeather = (weatherData) => {
 
 const getWeatherData = (city = 'Bielsko-biała') => {
   return fetch(`https://pogodynka.ml/${encodeURI(city)}`)
-    .then(response => response.json());
+    .then(response=> response.json())
+    .then(weatherData => {
+      storage.set('weatherData', weatherData);
+      return weatherData;
+    })
+    .catch(() => {
+      return new Promise((resolve, reject) => storage.get('weatherData', (error, data) => {
+        error ? reject(error) : resolve(data);
+      }));
+    });
 };
 
 

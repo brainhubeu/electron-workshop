@@ -1,0 +1,27 @@
+{
+  "name": "electron-workshop",
+  "version": "1.0.0",
+  "description": "A weather Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "lint": "eslint . --fix"
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.1",
+    "bootstrap": "^4.3.1",
+    "electron": "^4.0.7"
+  }
+}

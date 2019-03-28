@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Quantum weather!</title>
-    <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="style/main.css"/>
-  </head>
-  <body>
-    <h1>Hello</h1>
-    <script>
-      // You can also require other files to run in this process
-      require('./renderer.js')
-    </script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Quantum weather!</title>
+  <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="style/main.css" />
+</head>
+
+<body>
+  <div class="card">
+    <img id="weatherImage" class="card-img-top weather__image"
+      src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Weather icon">
+    <div class="card-body">
+      <h5 id="currentDescription" class="card-title">Weather</h5>
+      <p class="card-text">
+        <div>
+          <div>
+            <i class="fas fa-thermometer-half"></i>
+            <span id="currentTempLow"></span>
+            <span id="currentTempHigh"></span>
+          </div>
+          <div>
+            <i class="fas fa-wind"></i>
+            <span id="currentWindLow"></span>
+            <span id="currentWindHigh"></span>
+          </div>
+        </div>
+      </p>
+    </div>
+  </div>
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+</body>
+
 </html>

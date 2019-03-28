@@ -1,5 +1,6 @@
+/* global document */
 const { ipcRenderer } = require('electron');
-const storage = require('electron-json-storage');
+const getWeatherData = require('./weather');
 
 const updateValue = (id, value) => {
   if (value) {
@@ -30,20 +31,6 @@ const saveToJson = async () => {
   } catch (error) {
     console.error(error);
   }
-};
-
-const getWeatherData = (city = 'Bielsko-biała') => {
-  return fetch(`https://pogodynka.ml/${encodeURI(city)}`)
-    .then(response=> response.json())
-    .then(weatherData => {
-      storage.set('weatherData', weatherData);
-      return weatherData;
-    })
-    .catch(() => {
-      return new Promise((resolve, reject) => storage.get('weatherData', (error, data) => {
-        error ? reject(error) : resolve(data);
-      }));
-    });
 };
 
 

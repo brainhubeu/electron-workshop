@@ -1,8 +1,21 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, Tray } = require('electron');
+const notify = require('electron-main-notification');
 const fs = require('fs');
+const getWeatherData = require('./weather');
 
 let mainWindow;
+let tray = null;
 
+const showNotification = async () => {
+  const weatherData = await getWeatherData();
+
+  notify('Weather', {
+    body: `
+Temperature: ${weatherData.now.temperatureLow}, 
+Wind direction: ${weatherData.now.windDirectionIcon},
+Wind speed: ${weatherData.now.windLow} km/h`,
+  });
+};
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 260,
@@ -15,8 +28,18 @@ const createWindow = () => {
 
   mainWindow.loadFile('index.html');
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  mainWindow.on('minimize', (event) => {
+    event.preventDefault();
+    mainWindow.hide();
+  });
+
+  mainWindow.on('close', event => {
+    if (!app.isQuiting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+
+    return false;
   });
 
   return mainWindow;
@@ -52,15 +75,33 @@ const createMenu = (window) => {
   Menu.setApplicationMenu(menu);
 };
 
+const createTray = (window) => {
+  const trayMenuTemplate = [
+    {
+      label: 'Show application',
+      click: () => {
+        window.show();
+      },
+    },
+    { label: 'Show weather', click: showNotification },
+    { type: 'separator' },
+    { label: 'Quit', click: () => app.exit(0) },
+  ];
+
+  tray = new Tray('icons/cloud.png');
+  tray.on('click', showNotification);
+  const contextMenu = Menu.buildFromTemplate(trayMenuTemplate);
+  tray.setContextMenu(contextMenu);
+};
+
 app.on('ready', () => {
   const window = createWindow();
   createMenu(window);
+  createTray(window);
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  // do nothing
 });
 
 app.on('activate', () => {
